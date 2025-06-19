@@ -1,26 +1,29 @@
-import {
-    Application,
-    extend,
-} from '@pixi/react';
-import {
-    Container,
-    Graphics,
-    Sprite,
-} from 'pixi.js';
+import React, { useEffect, useRef } from 'react';
+import { playgroundPixi } from './engine/pixi/GameStage.tsx';
 
-// extend tells @pixi/react what Pixi.js components are available
-extend({
-    Container,
-    Graphics,
-    Sprite,
-});
+const App: React.FC = () => {
+    const pixiContainerRef = useRef<HTMLDivElement>(null);
 
-export default function App() {
-    return (
-        // We'll wrap our components with an <Application> component to provide
-        // the Pixi.js Application context
+    useEffect(() => {
+        let appIstance: ReturnType<typeof playgroundPixi> | null = null;
+        
+        const runPixi = async () => {
+            if(pixiContainerRef.current) {
+                appIstance = playgroundPixi(pixiContainerRef.current);
+            }
+        };
 
-            <div>TEST</div>
+        runPixi();
 
-    );
+        return () => {
+            if (appIstance && 'then' in appIstance) {
+                appIstance.then(app => {
+                    app.destroy(true, { children: true, texture: true });
+                });
+            }
+        };
+    }, []);
+    return <div ref={pixiContainerRef}/>;
 }
+
+export default App;
