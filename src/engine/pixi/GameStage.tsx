@@ -10,7 +10,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
 
     await app.init({background: 'black', resizeTo: window});
 
-    document.body.appendChild(app.canvas);
+    containerElement.appendChild(app.canvas);
 
     const container = new Container();
 

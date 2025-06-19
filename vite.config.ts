@@ -13,4 +13,6 @@ export default defineConfig({
   optimizeDeps: {
     include: ['pixi.js'],
   },
+
+  base: '/AsteroidWar/',
 })
