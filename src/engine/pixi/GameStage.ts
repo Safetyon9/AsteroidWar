@@ -4,6 +4,7 @@ import {
     Container,
     Sprite
 } from 'pixi.js';
+import { PlayerContainer } from '../../components/Player.ts';
 
 export async function playgroundPixi(containerElement: HTMLDivElement): Promise<Application> {
     const app = new Application();
@@ -12,38 +13,28 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
 
     containerElement.appendChild(app.canvas);
 
-    const container = new Container();
-
-    app.stage.addChild(container);
-
     const texture = await Assets.load('https://pixijs.com/assets/bunny.png');
+    const playerContainer = new PlayerContainer(texture);
 
-    const player = new Sprite(texture);
-    container.addChild(player);
+    app.stage.addChild(playerContainer);
 
-    player.anchor.set(0.5);
-    player.scale.set(4,4);
+    playerContainer.x = app.screen.width / 2;
+    playerContainer.y = app.screen.height / 2;
 
-    container.x = app.screen.width / 2;
-    container.y = app.screen.height / 2;
+    playerContainer.pivot.set(0, 0);
 
-    container.pivot.set(0, 0);
-    player.position.set(0, 0);
-
-    player.interactive = true;
-
-    player.on('pointerover', () => {
+    playerContainer.sprite.on('pointerover', () => {
         app.view.style.cursor = 'pointer';
     });
 
-    player.on('pointerout', () => {
+    playerContainer.sprite.on('pointerout', () => {
         app.view.style.cursor = 'default';
     });
 
     let isRotating = false;
     let isPause = false;
 
-    player.on('pointerdown', () => {
+    playerContainer.sprite.on('pointerdown', () => {
         if(!isPause){
             isRotating = !isRotating;
         }
@@ -52,8 +43,8 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
     app.stage.eventMode = 'static';
     app.stage.hitArea = app.screen;
 
-    let targetX = container.x;
-    let targetY = container.y;
+    let targetX = playerContainer.x;
+    let targetY = playerContainer.y;
 
     app.stage.on('pointermove', (event) => {
         const pos = event.global;
@@ -74,18 +65,18 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
     app.ticker.add((time) => {
         if(!isPause) {
             if(isRotating) {
-                container.rotation -= 0.05 * time.deltaTime;
+                playerContainer.rotation -= 0.05 * time.deltaTime;
             }
 
-            const dx = targetX - container.x;
-            const dy = targetY - container.y;
+            const dx = targetX - playerContainer.x;
+            const dy = targetY - playerContainer.y;
             const speed = 0.02;
 
             const dist = Math.sqrt(dx * dx + dy * dy);
 
             if (dist > 1) {
-                container.x += dx*speed;
-                container.y += dy*speed;
+                playerContainer.x += dx*speed;
+                playerContainer.y += dy*speed;
             }
         }
     });
