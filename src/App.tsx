@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { playgroundPixi } from './engine/pixi/GameStage.tsx';
+import { playgroundPixi } from './engine/pixi/GameStage.ts';
 
 const App: React.FC = () => {
     const pixiContainerRef = useRef<HTMLDivElement>(null);
