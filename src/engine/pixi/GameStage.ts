@@ -3,48 +3,52 @@ import {
     Assets,
 } from 'pixi.js';
 import { PlayerContainer } from '../../components/Player.ts';
+import { Laser } from '../../components/Laser.ts';
 
 export async function playgroundPixi(containerElement: HTMLDivElement): Promise<Application> {
     const app = new Application();
-
     await app.init({background: 'black', resizeTo: window});
 
     containerElement.appendChild(app.canvas);
 
-    const texture = await Assets.load('https://pixijs.com/assets/bunny.png');
-    const playerContainer = new PlayerContainer(texture);
+    const playerTexture = await Assets.load('/assets/player_sprites/jet_nord_static1.png');
+    const laserTexture = await Assets.load('/assets/player_sprites/laser_blue.png');
 
-    console.log('Cursore URL:', '/assets/cursore_custom.png');
     app.canvas.style.cursor = `url('/assets/cursore_custom.png') 16 16, auto`;
 
+    const playerContainer = new PlayerContainer(playerTexture);
     app.stage.addChild(playerContainer);
 
     playerContainer.x = app.screen.width / 2;
     playerContainer.y = app.screen.height / 2;
     playerContainer.pivot.set(0, 0);
 
-    playerContainer.sprite.on('pointerover', () => {
-       //app.canvas.style.cursor = 'pointer';
-    });
-
-    playerContainer.sprite.on('pointerout', () => {
-        //app.canvas.style.cursor = 'default';
-    });
-
-    let isRotating = false;
     let isPause = false;
+    let canShoot = true;
 
-    app.stage.on('pointerdown', () => {
-        if(!isPause){
-            isRotating = !isRotating;
-        }
-    });
-
+    const lasers: Laser[] = [];
+    
     app.stage.eventMode = 'static';
     app.stage.hitArea = app.screen;
 
     let targetX = playerContainer.x;
     let targetY = playerContainer.y;
+
+    app.stage.on('pointerdown', () => {
+        if(canShoot) {
+            const laser = new Laser(
+                laserTexture,
+                playerContainer.x,
+                playerContainer.y - 10
+            );
+
+            app.stage.addChild(laser);
+            lasers.push(laser);
+
+            canShoot = false;
+            setTimeout(() => (canShoot = true), 200)
+        }
+    });
 
     app.stage.on('pointermove', (event) => {
         const pos = event.global;
@@ -62,12 +66,8 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
         }
     });
 
-    app.ticker.add((time) => {
+    app.ticker.add(() => {
         if(!isPause) {
-            if(isRotating) {
-                playerContainer.rotation -= 0.05 * time.deltaTime;
-            }
-
             const dx = targetX - playerContainer.x;
             const dy = targetY - playerContainer.y;
             const speed = 0.02;
@@ -77,6 +77,14 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
             if (dist > 1) {
                 playerContainer.x += dx*speed;
                 playerContainer.y += dy*speed;
+            }
+
+            for (let i = lasers.length-1; i >= 0; i--) {
+                lasers[i].update();
+                if(lasers[i].isOffScreen()) {
+                    app.stage.removeChild(lasers[i]);
+                    lasers.splice(i,1);
+                }
             }
         }
     });
