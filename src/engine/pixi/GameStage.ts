@@ -1,7 +1,6 @@
 import {
     Application,
-    Assets,
-    Graphics
+    Assets
 } from 'pixi.js';
 import { PlayerContainer } from '../../components/Player.ts';
 import { Laser } from '../../components/Laser.ts';
