@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { playgroundPixi } from './engine/pixi/GameStage.ts';
+import MaintenancePage from './maintenance/MaintenancePage.tsx';
 
 const App: React.FC = () => {
     const pixiContainerRef = useRef<HTMLDivElement>(null);
@@ -23,7 +24,8 @@ const App: React.FC = () => {
             }
         };
     }, []);
-    return <div ref={pixiContainerRef}/>;
+    return <MaintenancePage />;
+    //<div ref={pixiContainerRef}/>
 }
 
 export default App;
