@@ -1,0 +1,86 @@
+.main-container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(ellipse at bottom, #0d1b2a 0%, #000 100%);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+.content {
+    position: relative;
+    text-align: center;
+    z-index: 2;
+}
+
+h1 {
+    margin-top: -5rem;
+    font-size: 3.5rem;
+    color: #00ade7;
+}
+
+.subtitle {
+    margin-top: 1rem;
+    color: #ccc;
+    font-size: 1.2rem;
+}
+
+.menu-alternatives {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    gap: 3rem;
+    z-index: 2;
+}
+
+.game-button {
+    display: flex;
+    width: 18rem;
+    color: #00bfff;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background-color: #000;
+    border-radius: 1rem;
+    box-shadow: 0 4px 10px rgba(0, 191, 255, 0.2);
+    font-size: large;
+}
+
+.game-button:hover {
+    transform: translateY(2px);
+}
+
+/* from github free repository */
+.stars {
+    width: 100%;
+    height: 100%;
+    background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
+    background-size: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: starScroll 100s linear infinite;
+    z-index: 1;
+    opacity: 0.2;
+}
+
+.nebula {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,0,200,0.2), transparent 70%),
+              radial-gradient(circle at 70% 60%, rgba(0,200,255,0.15), transparent 80%),
+              black;
+  filter: blur(2px);
+  z-index: 0;
+}
+
+@keyframes starScroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-1000px); }
+}
