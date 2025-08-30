@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { playgroundPixi } from './engine/pixi/GameStage.ts';
 import MaintenancePage from './pages/MaintenancePage.tsx';
-import MainMenu from './pages/MainMenu.tsx';
+//import MainMenu from './pages/MainMenu.tsx';
 
 const App: React.FC = () => {
     const pixiContainerRef = useRef<HTMLDivElement>(null);
