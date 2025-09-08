@@ -1,17 +1,22 @@
 import React from "react";
 import './StartingPages.css';
+import background from "../assets/nasa--hI5dX2ObAs-unsplash.jpg";
 
 const MaintenancePage: React.FC = () => {
     return (
-        <div className="main-container">
-            <div className="nebula" />
-            <div className="stars"/>
-                <div className="content">
-                    <h1>Site under maintenance</h1>
-                    <p>I'm working on some stars upgrades</p>
-                    <p className="subtitle">Thanks for your visti!</p>
-                </div>
-            </div>
+        <div className="main-container" style={{
+            backgroundImage: `url(${background})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            height: "100vh",
+            zIndex: "3",
+        }}>
+        <div className="content">
+            <h2>Site under maintenance</h2>
+            <p>I'm working on some stars upgrades</p>
+            <p className="subtitle">Thanks for your visti!</p>
+        </div>
+        </div>
     );
 };
 
