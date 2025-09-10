@@ -1,16 +1,16 @@
-import React from "react";
-
+import React, {useState} from "react";
 import './StartingPages.css';
 import background from "../assets/image/Copilot_20250908_165311.png";
-import HoverSoundButton from "../assets/audio/HoverSoundButton";
+import HoverSoundButton from "../assets/audio/HoverSoundButton.tsx";
 import hoverSound from "../assets/audio/ui-sound-hover.mp3";
-import BackgroundMusic from "../assets/audio/BackgroundMusic";
-
-import WelcomePanel from "../state/WelcomePanel";
+import BackgroundMusic from "../assets/audio/BackgroundMusic.tsx";
+import WelcomePanel from "../state/WelcomePanel.tsx";
+import EmailPanel from "../state/EmailPanel.tsx";
 import { useNavigate } from "react-router-dom";
 
 const MainMenu: React.FC = () => {
   const navigate = useNavigate();
+  const [showEmailPanel, setShowEmailPanel] = useState(false);
 
   return (
     <div className="main-container" style={{
@@ -22,6 +22,11 @@ const MainMenu: React.FC = () => {
     }}>
 
       <WelcomePanel />
+
+      <EmailPanel
+        visible={showEmailPanel}
+        onClose={() => setShowEmailPanel(false)}
+      />
 
         <BackgroundMusic />
         <div className="stars"/>
@@ -39,6 +44,7 @@ const MainMenu: React.FC = () => {
               className="game-button"
               style={{backgroundColor: "#C96B3C"}}
               hoverSrc={hoverSound}
+              onClick={() => null}
             >
                 Settings
             </HoverSoundButton>
@@ -46,6 +52,7 @@ const MainMenu: React.FC = () => {
               className="game-button"
               style={{backgroundColor: "#A8563A"}}
               hoverSrc={hoverSound}
+              onClick={() => null}
               >
                 Scoreboard
             </HoverSoundButton>
@@ -53,6 +60,7 @@ const MainMenu: React.FC = () => {
               className="game-button"
               style={{backgroundColor: "#7C4431"}}
               hoverSrc={hoverSound}
+              onClick={() => window.open("https://github.com/Safetyon9")}
             >
                 My GitHub
             </HoverSoundButton>
@@ -60,6 +68,7 @@ const MainMenu: React.FC = () => {
               className="game-button"
               style={{backgroundColor: "#5A3228"}}
               hoverSrc={hoverSound}
+              onClick={() => setShowEmailPanel(true)}
             >
                 Contact Me
             </HoverSoundButton>

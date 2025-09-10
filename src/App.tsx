@@ -37,7 +37,6 @@ const App: React.FC = () => {
                 <Route path="/" element={<MainMenu />} />
                 <Route path="/game" element={<GamePage />} />
                 <Route path="/maintenance" element={<MaintenancePage />} />
-                <Route path="*" element={<MaintenancePage />} />
             </Routes>
         </BrowserRouter>
     );
