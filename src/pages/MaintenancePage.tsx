@@ -14,7 +14,7 @@ const MaintenancePage: React.FC = () => {
         <div className="content">
             <h2>Site under maintenance</h2>
             <p>I'm working on some stars upgrades</p>
-            <p className="subtitle">Thanks for your visti!</p>
+            <p className="subtitle">Thanks for your visit!</p>
         </div>
         </div>
     );

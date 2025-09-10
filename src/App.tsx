@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { playgroundPixi } from './engine/pixi/GameStage.ts';
-//import MaintenancePage from './pages/MaintenancePage.tsx';
+import MaintenancePage from './pages/MaintenancePage.tsx';
 import MainMenu from './pages/MainMenu.tsx';
 
 const GamePage: React.FC = () => {
@@ -33,13 +33,12 @@ const GamePage: React.FC = () => {
 const App: React.FC = () => {
     return (
         <BrowserRouter>
-            <div>
-                <Routes>
-                    <Route path="/" element={<MainMenu />} />
-                    <Route path="/game" element={<GamePage />} />
-                    {/* <Route path="/maintenance" element={<MaintenancePage />} /> */}
-                </Routes>
-            </div>
+            <Routes>
+                <Route path="/" element={<MainMenu />} />
+                <Route path="/game" element={<GamePage />} />
+                <Route path="/maintenance" element={<MaintenancePage />} />
+                <Route path="*" element={<MaintenancePage />} />
+            </Routes>
         </BrowserRouter>
     );
 };

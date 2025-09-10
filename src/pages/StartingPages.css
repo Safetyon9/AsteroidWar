@@ -94,3 +94,9 @@
     0% { transform: translateX(0); }
     100% { transform: translateX(-1000px); }
 }
+
+@media (max-width: 768px) {
+    .titolo {
+        font-size: 3rem; /* riduci il font su tablet e mobile */
+    }
+}
