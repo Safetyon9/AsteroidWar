@@ -97,6 +97,7 @@
 
 @media (max-width: 768px) {
     .titolo {
-        font-size: 3rem; /* riduci il font su tablet e mobile */
+        font-size: 3rem;
+        padding: 0 1rem;
     }
 }
