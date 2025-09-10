@@ -6,15 +6,17 @@ interface Props {
     children: React.ReactNode;
     className?: string;
     style?: React.CSSProperties;
+    onClick?: () => void;
 }
 
-const HoverSoundButton: React.FC<Props> = ({ hoverSrc, children, className, style }) => { const [play] = useSound(hoverSrc, {volume: 0.5 })
+const HoverSoundButton: React.FC<Props> = ({ hoverSrc, children, className, style, onClick }) => { const [play] = useSound(hoverSrc, {volume: 0.5 })
 
     return (
         <button
             className={className}
             style={style}
             onMouseEnter={() => play()}
+            onClick={onClick}
         >
             {children}
         </button>

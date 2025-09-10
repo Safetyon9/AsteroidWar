@@ -1,11 +1,15 @@
 import React from "react";
+
 import './StartingPages.css';
-import background from "../assets/Copilot_20250908_165311.png";
-import HoverSoundButton from "../assets/HoverSoundButton";
-import hoverSound from "../assets/ui-sound-hover.mp3";
-import BackgroundMusic from "../assets/BackgroundMusic";
+import background from "../assets/image/Copilot_20250908_165311.png";
+import HoverSoundButton from "../assets/audio/HoverSoundButton";
+import hoverSound from "../assets/audio/ui-sound-hover.mp3";
+import BackgroundMusic from "../assets/audio/BackgroundMusic";
+
+import { useNavigate } from "react-router-dom";
 
 const MainMenu: React.FC = () => {
+  const navigate = useNavigate();
 
   return (
     <div className="main-container" style={{
@@ -17,12 +21,13 @@ const MainMenu: React.FC = () => {
     }}>
         <BackgroundMusic />
         <div className="stars"/>
-        <h1>SpaceWar 2D</h1>
+        <h1 className="titolo">SpaceWar 2D</h1>
         <div className="menu-alternatives">
             <HoverSoundButton
               className="game-button"
               style={{backgroundColor: "#E67E41"}}
               hoverSrc={hoverSound}
+              onClick={() => navigate("/game")}
             >
                 Start Game
             </HoverSoundButton>

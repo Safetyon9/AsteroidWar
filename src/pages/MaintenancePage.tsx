@@ -1,6 +1,6 @@
 import React from "react";
 import './StartingPages.css';
-import background from "../assets/nasa--hI5dX2ObAs-unsplash.jpg";
+import background from "../assets/image/nasa--hI5dX2ObAs-unsplash.jpg";
 
 const MaintenancePage: React.FC = () => {
     return (

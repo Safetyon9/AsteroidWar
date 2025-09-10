@@ -1,0 +1,42 @@
+.overlay-welcome {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(10,10,10,0.75);
+    z-index: 50;
+}
+
+.welcome-panel {
+    width: 50%;
+    height: 20%;
+    background: linear-gradient(135deg, #4e7ca0, #2c3e50);
+    border: 2px solid #ffb347;
+    padding: 3rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(255, 179, 71, 0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.benvenuto {
+    font-family: 'Russo One', sans-serif;
+    font-size: 2rem;
+    color: #ffcc80;
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px rgba(255, 204, 128, 0.6);
+}
+
+.click-avanti {
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1rem;
+    color: #e67e41;
+    margin-top: 20px;
+    text-shadow: 0 0 5px rgba(230, 126, 65, 0.4);
+}
