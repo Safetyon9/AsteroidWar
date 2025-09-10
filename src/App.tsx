@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { playgroundPixi } from './engine/pixi/GameStage.ts';
 //import MaintenancePage from './pages/MaintenancePage.tsx';

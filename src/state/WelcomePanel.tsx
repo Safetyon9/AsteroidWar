@@ -1,5 +1,5 @@
 import './WelcomePages.css';
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 
 const WelcomePanel: React.FC = () => {
     const [visible, setVisible] = useState(true);

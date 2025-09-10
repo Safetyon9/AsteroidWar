@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import './StartingPages.css';
 import background from "../assets/image/Copilot_20250908_165311.png";
@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 
 const MainMenu: React.FC = () => {
   const navigate = useNavigate();
-  const [showWelcome, setShowWelcome] = useState(true);
 
   return (
     <div className="main-container" style={{
