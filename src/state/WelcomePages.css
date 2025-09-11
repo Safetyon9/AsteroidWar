@@ -15,13 +15,26 @@
     height: 20%;
     background: linear-gradient(135deg, #4e7ca0, #2c3e50);
     border: 2px solid #ffb347;
-    padding: 3rem;
+    padding: 1rem;
     border-radius: 1rem;
     box-shadow: 0 0 20px rgba(255, 179, 71, 0.4);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    text-align: center;
+}
+
+.settings-panel {
+    width: 50%;
+    height: 60%;
+    background: linear-gradient(135deg, #4e7ca0, #2c3e50);
+    border: 2px solid #ffb347;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(255, 179, 71, 0.4);
+    display: grid;
+    grid-template-rows: 5rem 1fr 5rem;
     text-align: center;
 }
 
@@ -41,7 +54,41 @@
     text-shadow: 0 0 5px rgba(230, 126, 65, 0.4);
 }
 
+.settings-grid {
+    display: grid;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 1.2rem;
+    color: #e67e41;
+    margin-top: 20px;
+    text-shadow: 0 0 5px rgba(230, 126, 65, 0.4);
+}
+
+.settings-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.setting-name {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.setting-change {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
 .email-btn {
     background-color: #ffcc80;
     margin-top: 20px;
+}
+
+.settings-btn {
+    background-color: #ffcc80;
+    margin-top: 20px;
+    align-self: center;
+    justify-self: center;
 }

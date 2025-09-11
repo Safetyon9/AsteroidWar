@@ -5,12 +5,14 @@ import HoverSoundButton from "../assets/audio/HoverSoundButton.tsx";
 import hoverSound from "../assets/audio/ui-sound-hover.mp3";
 import BackgroundMusic from "../assets/audio/BackgroundMusic.tsx";
 import WelcomePanel from "../state/WelcomePanel.tsx";
+import SettingsPanel from "../state/SettingsPanel.tsx";
 import EmailPanel from "../state/EmailPanel.tsx";
 import { useNavigate } from "react-router-dom";
 
 const MainMenu: React.FC = () => {
   const navigate = useNavigate();
   const [showEmailPanel, setShowEmailPanel] = useState(false);
+  const [showSettingsPanel, setShowSettingsPanel] = useState(false);
 
   return (
     <div className="main-container" style={{
@@ -26,6 +28,11 @@ const MainMenu: React.FC = () => {
       <EmailPanel
         visible={showEmailPanel}
         onClose={() => setShowEmailPanel(false)}
+      />
+
+      <SettingsPanel
+        visible={showSettingsPanel}
+        onClose={() => setShowSettingsPanel(false)}
       />
 
         <BackgroundMusic />
@@ -44,7 +51,7 @@ const MainMenu: React.FC = () => {
               className="game-button"
               style={{backgroundColor: "#C96B3C"}}
               hoverSrc={hoverSound}
-              onClick={() => null}
+              onClick={() => setShowSettingsPanel(true)}
             >
                 Settings
             </HoverSoundButton>

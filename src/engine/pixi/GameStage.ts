@@ -13,7 +13,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
 
     containerElement.appendChild(app.canvas);
 
-    const playerTexture = await Assets.load('/assets/player_sprites/jet_nord_static1.png');
+    const playerTexture = await Assets.load('/assets/player_sprites/jet_eagle_static.png');
     const laserTexture = await Assets.load('/assets/player_sprites/laser_blue.png');
     const asteroidTexture = await Assets.load('/assets/asteroid.png');
 
@@ -42,7 +42,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
     setInterval( () => {
         if(!isPause && app.stage) {
             const randomX = Math.floor(Math.random() * window.innerWidth);
-            const randomY = Math.floor(-Math.random() * 200-100);
+            const randomY = Math.floor(-Math.random() * 200-150);
             const randomSpeed = 1.5 + Math.random() * 2;
             const randomScale = 0.5 + Math.random() * 1.2;
             
