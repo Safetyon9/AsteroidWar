@@ -1,15 +1,15 @@
 import {
     Container,
     Sprite,
-    Texture,
-    Graphics
+    Texture
+    //Graphics
 } from 'pixi.js';
 import SAT from 'sat';
 
 export class PlayerContainer extends Container {
     public sprite: Sprite;
     public polygon: SAT.Polygon;
-    private debugPolygon: Graphics;
+    //private debugPolygon: Graphics;
 
     constructor(texture: Texture) {
         super();
@@ -35,15 +35,16 @@ export class PlayerContainer extends Container {
         ];
         this.polygon = this.polygon = new SAT.Polygon(new SAT.Vector(this.x, this.y), points);
 
-        this.debugPolygon = new Graphics();
-        this.drawPolygon();
-        this.addChild(this.debugPolygon);
+        //this.debugPolygon = new Graphics();
+        //this.drawPolygon();
+        //this.addChild(this.debugPolygon);
 
         this.eventMode = 'static';
         this.sprite.eventMode = 'static';
         this.sprite.interactive = true;
     }
 
+    /*
     private drawPolygon() {
         this.debugPolygon.clear();
 
@@ -63,6 +64,7 @@ export class PlayerContainer extends Container {
 
         this.debugPolygon.endFill();
     }
+    */
 
     update(asseX: number, asseY: number) {
         this.x += asseX;

@@ -1,11 +1,14 @@
 import './WelcomePages.css';
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from "@mui/material/Select";
+
+import { DEFAULT_SETTINGS, type GameSettings } from '../types/settingsType.ts';
+import { saveSettings, loadSettings } from '../util/settingStorage.ts';
 
 
 type SettingsPanelProps = {
@@ -14,10 +17,12 @@ type SettingsPanelProps = {
 };
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
-    const [selected, setSelected] = useState<string[]>([]);
-    const handleChange = (event: any) => {
-        setSelected(event.target.value as string[]);
-    }
+    const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
+
+    useEffect(() => {
+        const saved = loadSettings();
+        if (saved) setSettings(saved);
+    }, []);
 
     if(!visible) return null;
 
@@ -38,9 +43,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                                 <InputLabel sx={{ color: 'white'}} id="multi-select-label">Choose your controls</InputLabel>
                                 <Select
                                     sx={{color:'white'}}
-                                    labelId="select-label"
-                                    value={selected}
-                                    onChange={handleChange}
+                                    labelId="controls-label"
+                                    value={settings.controls}
+                                    onChange={(e) => setSettings(prev => ({...prev, controls: e.target.value as GameSettings["controls"]}))}
                                     MenuProps={{
                                         PaperProps: {
                                             sx: { backgroundColor: '#4e7ca0' }
@@ -49,6 +54,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                                 >
                                     <MenuItem sx={{color:'white'}} value="op1">keyboard</MenuItem>
                                     <MenuItem sx={{color:'white'}} value="op2">mouse</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="op3">mobile</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>
@@ -56,7 +62,11 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                     <div className='settings-options'>
                         <p className='setting-name'>volume</p>
                         <div className='setting-change'>
-                            <Slider sx={{color:'white'}} defaultValue={50} aria-label="Default" valueLabelDisplay="auto" />
+                            <Slider
+                                sx={{color:'white'}}
+                                value={settings.volume}
+                                onChange={(_, val) => setSettings(prev => ({...prev, volume: val as number}))}
+                                aria-label="Default" valueLabelDisplay="auto" />
                         </div>
                     </div>
                     <div className='settings-options'>
@@ -66,9 +76,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                                 <InputLabel sx={{ color: 'white'}} id="multi-select-label">Choose your ship</InputLabel>
                                 <Select
                                     sx={{color:'white'}}
-                                    labelId="select-label"
-                                    value={selected}
-                                    onChange={handleChange}
+                                    labelId="ship-label"
+                                    value={settings.ship}
+                                    onChange={(e) => setSettings(prev => ({...prev, ship: e.target.value as GameSettings["ship"]}))}
                                     MenuProps={{
                                         PaperProps: {
                                             sx: { backgroundColor: '#4e7ca0' }
@@ -88,9 +98,9 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                                 <InputLabel sx={{ color: 'white'}} id="multi-select-label">Choose your language</InputLabel>
                                 <Select
                                     sx={{color:'white'}}
-                                    labelId="select-label"
-                                    value={selected}
-                                    onChange={handleChange}
+                                    labelId="language-label"
+                                    value={settings.language}
+                                    onChange={(e) => setSettings(prev => ({...prev, language: e.target.value as GameSettings["language"]}))}
                                     MenuProps={{
                                         PaperProps: {
                                             sx: { backgroundColor: '#4e7ca0' }
@@ -107,7 +117,8 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                         <p className='setting-name'>Subtitles</p>
                         <div className='setting-change'>
                             <Switch
-                                defaultChecked
+                                checked={settings.subtitles}
+                                onChange={(e) => setSettings(prev => ({...prev, subtitles: e.target.checked}))}
                                 sx={{
                                     '& .MuiSwitch-switchBase.Mui-checked': {
                                         color: '#ffcc80',
@@ -127,7 +138,13 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                         </div>
                     </div>
                 </div>
-                <button className='settings-btn' onClick={onClose}>
+                <button 
+                    className='settings-btn'
+                    onClick={() => {
+                        saveSettings(settings);
+                        onClose();
+                    }}
+                >
                     save
                 </button>
             </div>

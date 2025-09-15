@@ -1,14 +1,14 @@
 import {
     Sprite,
-    Texture,
-    Graphics
+    Texture
+    //Graphics
 } from 'pixi.js';
 import SAT from 'sat';
 
 export class Laser extends Sprite {
     private speed: number = 12;
     public polygon: SAT.Polygon;
-    private debugPolygon: Graphics;
+    //private debugPolygon: Graphics;
 
     constructor(texture: Texture, x: number, y: number) {
         super(texture);
@@ -32,11 +32,12 @@ export class Laser extends Sprite {
 
         this.polygon = new SAT.Polygon(new SAT.Vector(x, y), points);
 
-        this.debugPolygon = new Graphics();
-        this.drawPolygon();
-        this.addChild(this.debugPolygon);
+        //this.debugPolygon = new Graphics();
+        //this.drawPolygon();
+        //this.addChild(this.debugPolygon);
     }
 
+    /*
     private drawPolygon() {
         this.debugPolygon.clear();
 
@@ -56,6 +57,7 @@ export class Laser extends Sprite {
 
         this.debugPolygon.endFill();
     }
+    */
     
     update() {
         this.y -= this.speed;
