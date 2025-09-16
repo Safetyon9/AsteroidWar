@@ -15,7 +15,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
 
     const playerTexture = await Assets.load('/assets/player_sprites/jet_eagle_static.png');
     const laserTexture = await Assets.load('/assets/player_sprites/laser_blue.png');
-    const asteroidTexture = await Assets.load('/assets/asteroid.png');
+    const asteroidTexture = await Assets.load('/assets/asteroids/asteroid_1.png');
 
     app.canvas.style.cursor = `url('/assets/cursore_custom.png') 16 16, auto`;
 
@@ -44,7 +44,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
             const randomX = Math.floor(Math.random() * window.innerWidth);
             const randomY = Math.floor(-Math.random() * 200-150);
             const randomSpeed = 1.5 + Math.random() * 2;
-            const randomScale = 0.5 + Math.random() * 1.2;
+            const randomScale = Math.random();
             
             const asteroid = new Asteroid(
                 asteroidTexture,

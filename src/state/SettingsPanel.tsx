@@ -7,16 +7,10 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from "@mui/material/Select";
 
-import { DEFAULT_SETTINGS, type GameSettings } from '../types/settingsType.ts';
+import { DEFAULT_SETTINGS, type GameSettings, type SettingsPanelProps } from '../types/settingsType.ts';
 import { saveSettings, loadSettings } from '../util/settingStorage.ts';
 
-
-type SettingsPanelProps = {
-  visible: boolean;
-  onClose: () => void;
-};
-
-const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
+const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusicRef })=> {
     const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
 
     useEffect(() => {
@@ -65,8 +59,15 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose })=> {
                             <Slider
                                 sx={{color:'white'}}
                                 value={settings.volume}
-                                onChange={(_, val) => setSettings(prev => ({...prev, volume: val as number}))}
-                                aria-label="Default" valueLabelDisplay="auto" />
+                                onChange={(_, val) => {
+                                    const v = val as number;
+                                    setSettings(prev => ({...prev, volume: v}));
+                                    bgMusicRef.current?.setCustomVolume(v);
+                                }}
+                                min={0}
+                                max={0.1}
+                                step={0.01}
+                                aria-label="Volume" valueLabelDisplay="auto" />
                         </div>
                     </div>
                     <div className='settings-options'>

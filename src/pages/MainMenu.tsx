@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React, { useState, useRef } from "react";
 import './StartingPages.css';
-import background from "../assets/image/Copilot_20250908_165311.png";
+import MenuBackgroundImage from "../assets/image/Copilot_20250908_165311.png";
 import HoverSoundButton from "../assets/audio/HoverSoundButton.tsx";
 import hoverSound from "../assets/audio/ui-sound-hover.mp3";
 import BackgroundMusic from "../assets/audio/BackgroundMusic.tsx";
@@ -8,15 +8,19 @@ import WelcomePanel from "../state/WelcomePanel.tsx";
 import SettingsPanel from "../state/SettingsPanel.tsx";
 import EmailPanel from "../state/EmailPanel.tsx";
 import { useNavigate } from "react-router-dom";
+import type { BackgroundMusicRef } from "../types/settingsType.ts";
+import MenuBackgroundMusic from "../assets/audio/space-background.mp3";
 
 const MainMenu: React.FC = () => {
   const navigate = useNavigate();
   const [showEmailPanel, setShowEmailPanel] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
 
+  const bgMusicRef = useRef<BackgroundMusicRef>(null);
+
   return (
     <div className="main-container" style={{
-      backgroundImage: `url(${background})`,
+      backgroundImage: `url(${MenuBackgroundImage})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       height: "100vh",
@@ -33,9 +37,10 @@ const MainMenu: React.FC = () => {
       <SettingsPanel
         visible={showSettingsPanel}
         onClose={() => setShowSettingsPanel(false)}
+        bgMusicRef={bgMusicRef}
       />
+      <BackgroundMusic ref={bgMusicRef} song={MenuBackgroundMusic} />
 
-        <BackgroundMusic />
         <div className="stars"/>
         <h1 className="titolo">SpaceWar 2D</h1>
         <div className="menu-alternatives">

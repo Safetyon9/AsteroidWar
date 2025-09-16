@@ -1,8 +1,8 @@
 import {
     Container,
     Sprite,
-    Texture
-    //Graphics
+    Texture,
+    Graphics
 } from 'pixi.js';
 import * as SAT from 'sat';
 
@@ -10,7 +10,7 @@ export class Asteroid extends Container {
     public sprite: Sprite;
     public polygon: SAT.Polygon;
     private speed: number;
-    //private debugPolygon: Graphics;
+    private debugPolygon: Graphics;
     //private rotation_multi: number;
 
     constructor(texture: Texture, x: number, y: number, speed: number, scale: number/*, rotation_multi: number*/) {
@@ -45,15 +45,14 @@ export class Asteroid extends Container {
 
         this.polygon = new SAT.Polygon(new SAT.Vector(x, y), scaledPoints);
 
-        //this.debugPolygon = new Graphics();
-        //this.drawPolygon();
-        //this.addChild(this.debugPolygon);
+        this.debugPolygon = new Graphics();
+        this.drawPolygon();
+        this.addChild(this.debugPolygon);
 
         
         this.eventMode = 'static'; 
     }
 
-    /*
     private drawPolygon() {
         this.debugPolygon.clear();
 
@@ -73,7 +72,6 @@ export class Asteroid extends Container {
 
         this.debugPolygon.endFill();
     }
-    */
 
     update(delta: number) {
         //this.rotation += 0.01 * delta * this.rotation_multi;

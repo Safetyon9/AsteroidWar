@@ -1,10 +1,6 @@
 import './WelcomePages.css';
 import React from "react";
-
-type EmailPanelProps = {
-  visible: boolean;
-  onClose: () => void;
-};
+import type { EmailPanelProps } from '../types/settingsType.ts';
 
 const EmailPanel: React.FC<EmailPanelProps> = ({ visible, onClose })=> {
     if(!visible) return null;
