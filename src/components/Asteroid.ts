@@ -1,19 +1,28 @@
 import {
     Container,
     Sprite,
-    Texture,
-    Graphics
+    Texture
+    //Graphics
 } from 'pixi.js';
 import * as SAT from 'sat';
+
+import polygon0 from '../assets/asteroids/asteroid1_polygon.json';
+import polygon1 from '../assets/asteroids/asteroid2_polygon.json';
+import polygon2 from '../assets/asteroids/asteroid3_polygon.json';
+import polygon3 from '../assets/asteroids/asteroid4_polygon.json';
+import polygon4 from '../assets/asteroids/asteroid5_polygon.json';
+import polygon5 from '../assets/asteroids/asteroid6_polygon.json';
+
+const polygonsJSON = [polygon0, polygon1, polygon2, polygon3, polygon4, polygon5];
 
 export class Asteroid extends Container {
     public sprite: Sprite;
     public polygon: SAT.Polygon;
     private speed: number;
-    private debugPolygon: Graphics;
+    //private debugPolygon: Graphics;
     //private rotation_multi: number;
 
-    constructor(texture: Texture, x: number, y: number, speed: number, scale: number/*, rotation_multi: number*/) {
+    constructor(texture: Texture, x: number, y: number, speed: number, scale: number, variant: number/*, rotation_multi: number*/) {
         super();
 
         this.sprite = new Sprite(texture);
@@ -25,34 +34,21 @@ export class Asteroid extends Container {
         this.speed = speed;
         //this.rotation_multi = rotation_multi;
 
-        const points = [
-            new SAT.Vector(53, 0),
-            new SAT.Vector(29, 1),
-            new SAT.Vector(9, 2),
-            new SAT.Vector(0, 12),
-            new SAT.Vector(2, 49),
-            new SAT.Vector(4, 98),
-            new SAT.Vector(23, 119),
-            new SAT.Vector(54, 125),
-            new SAT.Vector(68, 133),
-            new SAT.Vector(83, 120),
-            new SAT.Vector(86, 105),
-            new SAT.Vector(99, 90),
-            new SAT.Vector(72, 22),
-        ];
-
+        const verticesArray = polygonsJSON[variant];
+        const points = verticesArray.map(([x, y]) => new SAT.Vector(x, y));
         const scaledPoints = points.map(point => new SAT.Vector(point.x*scale, point.y*scale));
 
         this.polygon = new SAT.Polygon(new SAT.Vector(x, y), scaledPoints);
 
-        this.debugPolygon = new Graphics();
-        this.drawPolygon();
-        this.addChild(this.debugPolygon);
+        //this.debugPolygon = new Graphics();
+        //this.drawPolygon();
+        //this.addChild(this.debugPolygon);
 
         
         this.eventMode = 'static'; 
     }
 
+    /*
     private drawPolygon() {
         this.debugPolygon.clear();
 
@@ -72,6 +68,7 @@ export class Asteroid extends Container {
 
         this.debugPolygon.endFill();
     }
+    */
 
     update(delta: number) {
         //this.rotation += 0.01 * delta * this.rotation_multi;

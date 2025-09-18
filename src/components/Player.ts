@@ -6,33 +6,28 @@ import {
 } from 'pixi.js';
 import SAT from 'sat';
 
+import polygon0 from '../assets/player_sprites/jet_eagle1_grande_polygon.json';
+import polygon1 from '../assets/player_sprites/jet_eagle2_grande_polygon.json';
+import polygon2 from '../assets/player_sprites/jet_black_grande_polygon.json';
+import polygon3 from '../assets/player_sprites/jet_star_grande_polygon.json';
+
+const polygonsJSON = [polygon0, polygon1, polygon2, polygon3];
+
 export class PlayerContainer extends Container {
     public sprite: Sprite;
     public polygon: SAT.Polygon;
     //private debugPolygon: Graphics;
 
-    constructor(texture: Texture) {
+    constructor(texture: Texture, variant: 0 | 1 | 2 | 3) {
         super();
 
         this.sprite = new Sprite(texture);
+        this.sprite.scale.set(0.3);
         this.addChild(this.sprite);
 
-        const points = [
-            new SAT.Vector(19, 0),
-            new SAT.Vector(11, 27),
-            new SAT.Vector(11, 38),
-            new SAT.Vector(1, 51),
-            new SAT.Vector(0, 57),
-            new SAT.Vector(2, 61),
-            new SAT.Vector(14, 56),
-            new SAT.Vector(25, 56),
-            new SAT.Vector(37, 61),
-            new SAT.Vector(39, 57),
-            new SAT.Vector(38, 52),
-            new SAT.Vector(28, 38),
-            new SAT.Vector(28, 27),
-            new SAT.Vector(20, 0),
-        ];
+        const verticesArray = polygonsJSON[variant];
+        const points = verticesArray.map(([x, y]) => new SAT.Vector(x * 0.3, y * 0.3));
+
         this.polygon = this.polygon = new SAT.Polygon(new SAT.Vector(this.x, this.y), points);
 
         //this.debugPolygon = new Graphics();

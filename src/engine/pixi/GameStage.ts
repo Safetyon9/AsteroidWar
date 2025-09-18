@@ -1,31 +1,85 @@
 import {
     Application,
     Assets
+    //v8_0_0
 } from 'pixi.js';
 import { PlayerContainer } from '../../components/Player.ts';
 import { Laser } from '../../components/Laser.ts';
 import { Asteroid } from '../../components/Asteroid.ts';
 import SAT from 'sat';
+import cursoreCustom from '../../assets/image/cursore_custom.png'
+import playerTexturePath1 from '../../assets/player_sprites/jet_eagle1_grande.png'
+import playerTexturePath3 from '../../assets/player_sprites/jet_black_grande.png'
+import playerTexturePath4 from '../../assets/player_sprites/jet_star_grande.png'
+import playerTexturePath2 from '../../assets/player_sprites/jet_eagle2_grande.png'
+import laserTexturePath from '../../assets/player_sprites/laser_blue.png'
+import asteroidTexturePath1 from '../../assets/asteroids/asteroid1.png'
+import asteroidTexturePath2 from '../../assets/asteroids/asteroid2.png'
+import asteroidTexturePath3 from '../../assets/asteroids/asteroid3.png'
+import asteroidTexturePath4 from '../../assets/asteroids/asteroid4.png'
+import asteroidTexturePath5 from '../../assets/asteroids/asteroid5.png'
+import asteroidTexturePath6 from '../../assets/asteroids/asteroid6.png'
 
-export async function playgroundPixi(containerElement: HTMLDivElement): Promise<Application> {
+export interface GameCallbacks {
+    onScoreChange?: (score: number) => void;
+    onLifeChange?: (lives: number) => void;
+    onGameOver?: () => void;
+    onPauseChange?: (paused: boolean) => void;
+}
+
+export async function playgroundPixi(containerElement: HTMLDivElement, callbacks?: GameCallbacks): Promise<Application> {
+
     const app = new Application();
     await app.init({background: 'black', resizeTo: window});
 
     containerElement.appendChild(app.canvas);
 
-    const playerTexture = await Assets.load('/assets/player_sprites/jet_eagle_static.png');
-    const laserTexture = await Assets.load('/assets/player_sprites/laser_blue.png');
-    const asteroidTexture = await Assets.load('/assets/asteroids/asteroid_1.png');
+    const playerTexture = [
+        await Assets.load(playerTexturePath1),
+        await Assets.load(playerTexturePath2),
+        await Assets.load(playerTexturePath3),
+        await Assets.load(playerTexturePath4),
+    ];
+    const laserTexture = await Assets.load(laserTexturePath);
+    const asteroidTexture = [
+        await Assets.load(asteroidTexturePath1),
+        await Assets.load(asteroidTexturePath2),
+        await Assets.load(asteroidTexturePath3),
+        await Assets.load(asteroidTexturePath4),
+        await Assets.load(asteroidTexturePath5),
+        await Assets.load(asteroidTexturePath6),
+    ];
 
-    app.canvas.style.cursor = `url('/assets/cursore_custom.png') 16 16, auto`;
+    app.canvas.style.cursor = `url(${cursoreCustom}) 16 16, auto`;
 
-    const playerContainer = new PlayerContainer(playerTexture);
+    const playerContainer = new PlayerContainer(playerTexture[1],1);
     playerContainer.x = app.screen.width / 2;
     playerContainer.y = app.screen.height / 2;
     playerContainer.pivot.set(0, 0);
     let targetX = playerContainer.x;
     let targetY = playerContainer.y;
     app.stage.addChild(playerContainer);
+
+    let score = 0;
+    let lives = 3;
+    let hitCooldown = false;
+
+    function addScore(points: number) {
+        score += points;
+        callbacks?.onScoreChange?.(score);
+    }
+
+    function removeLife() {
+        if (lives>0) lives -= 1;
+        callbacks?.onLifeChange?.(lives);
+
+        if (lives <= 0) {
+            app.stage.removeChild(playerContainer);
+            canShoot = false;
+            isPause = true;
+            callbacks?.onGameOver?.();
+        }
+    }
 
     const lasers: Laser[] = [];
 
@@ -43,15 +97,18 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
         if(!isPause && app.stage) {
             const randomX = Math.floor(Math.random() * window.innerWidth);
             const randomY = Math.floor(-Math.random() * 200-150);
-            const randomSpeed = 1.5 + Math.random() * 2;
-            const randomScale = Math.random();
+            const randomSpeed = 3 + Math.random() * 2;
+            const randomScale = 0.1 + Math.random() * 0.2;
+
+            const randomTexture = Math.floor(Math.random()*5)
             
             const asteroid = new Asteroid(
-                asteroidTexture,
+                asteroidTexture[randomTexture],
                 randomX,
                 randomY,
                 randomSpeed,
                 randomScale,
+                randomTexture
             );
             app.stage.addChild(asteroid);
             asteroids.push(asteroid);
@@ -62,7 +119,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
         if(canShoot) {
             const laser = new Laser(
                 laserTexture,
-                playerContainer.x,
+                playerContainer.x + playerContainer.sprite.width/2 - laserTexture.width/2,
                 playerContainer.y - 10
             );
 
@@ -73,7 +130,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
             canShootTimeout = setTimeout(() => {
                 canShoot = true
                 canShootTimeout = null;
-            }, 200);
+            }, 500);
         }
     });
 
@@ -85,18 +142,12 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
 
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-            if (isPause){
-                isPause = false;
-
-                canShoot = true;
-            } else {
-                isPause = true;
-                if(canShootTimeout) {
-                    clearTimeout(canShootTimeout);
-                    canShootTimeout = null;
-                }
-                canShoot = false;
-            } 
+            isPause = !isPause;
+            if (canShootTimeout && isPause) {
+                clearTimeout(canShootTimeout);
+                canShootTimeout = null;
+            }
+            callbacks?.onPauseChange?.(isPause);
         }
     });
 
@@ -128,6 +179,7 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
                         app.stage.removeChild(asteroids[j]);
                         lasers.splice(i,1);
                         asteroids.splice(j,1);
+                        addScore(1);
                         break;
                     }
                 }
@@ -140,8 +192,16 @@ export async function playgroundPixi(containerElement: HTMLDivElement): Promise<
                     asteroids.splice(i,1);
                 }
                 if(SAT.testPolygonPolygon(asteroids[i].getPolygon(),playerContainer.getPolygon())) {
-                    app.stage.removeChild(playerContainer);
-                    canShoot = false;
+
+                    if (!hitCooldown) {
+                        removeLife();
+                        hitCooldown = true;
+                    }
+
+                    setTimeout(() => {
+                        hitCooldown = false;
+                    }, 1000);
+
                 }
             }
 
