@@ -13,6 +13,21 @@
     z-index: 9999;
 }
 
+.overlay-settings {
+    position: fixed;
+    top: 0;
+    left: 0;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
 .planet-container {
     position: relative;
     width: 400px;
@@ -71,6 +86,18 @@
     40% { opacity: 1; }
 }
 
+.settings-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #4e7ca0;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+}
+
 .benvenuto {
     font-family: 'Russo One', sans-serif;
     font-size: 2rem;
@@ -89,6 +116,7 @@
 
 .settings-grid {
     display: grid;
+    width: 100%;
     font-family: 'Exo 2', sans-serif;
     font-size: 1.2rem;
     color: #e67e41;
@@ -124,4 +152,31 @@
     margin-top: 20px;
     align-self: center;
     justify-self: center;
+}
+
+@media (max-width: 580px) {
+    .loading-text {
+        font-family: "Orbitron", sans-serif;
+        color: #ffcc80;
+        font-size: 24px;
+        letter-spacing: 2px;
+    }
+
+    .settings-options {
+        flex-direction: column;
+    }
+
+    .setting-name {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .setting-change {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
 }

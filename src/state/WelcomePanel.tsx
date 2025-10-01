@@ -2,20 +2,26 @@ import './WelcomePages.css';
 import React, { useEffect, useState } from "react";
 
 interface WelcomePanelProps {
-    imageSrc: string;
+    imageSrc?: string;
+    loadingTime?: number;
 }
 
-const WelcomePanel: React.FC<WelcomePanelProps> = ({ imageSrc }) => {
+const WelcomePanel: React.FC<WelcomePanelProps> = ({ imageSrc, loadingTime }) => {
     const [loading, setLoading] = useState(true);
     const [visible, setVisible] = useState(true);
     
     useEffect(() => {
-        const img = new Image();
-        img.src = imageSrc;
-        img.onload = () => {
-            setTimeout(() => setLoading(false), 2000);
+        if (imageSrc) {
+            const img = new Image();
+            img.src = imageSrc;
+            img.onload = () => {
+                setTimeout(() => setLoading(false), loadingTime);
+            };
+        } else {
+            const timer = setTimeout(() => setLoading(false), loadingTime);
+            return () => clearTimeout(timer);
         }
-    }, [imageSrc]);
+    }, [imageSrc, loadingTime]);
 
     if (!visible) return null;
 

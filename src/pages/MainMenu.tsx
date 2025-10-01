@@ -27,7 +27,7 @@ const MainMenu: React.FC = () => {
       zIndex: "3",
     }}>
 
-      <WelcomePanel imageSrc={MenuBackgroundImage} />
+      <WelcomePanel imageSrc={MenuBackgroundImage} loadingTime={1000}/>
 
       <EmailPanel
         visible={showEmailPanel}

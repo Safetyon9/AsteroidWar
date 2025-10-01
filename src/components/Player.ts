@@ -1,8 +1,8 @@
 import {
     Container,
     Sprite,
-    Texture
-    //Graphics
+    Texture,
+    Graphics
 } from 'pixi.js';
 import SAT from 'sat';
 
@@ -15,31 +15,49 @@ const polygonsJSON = [polygon0, polygon1, polygon2, polygon3];
 
 export class PlayerContainer extends Container {
     public sprite: Sprite;
-    public polygon: SAT.Polygon;
-    //private debugPolygon: Graphics;
+    public polygon!: SAT.Polygon;
+    private debugPolygon: Graphics;
 
-    constructor(texture: Texture, variant: 0 | 1 | 2 | 3) {
+    constructor(texture: Texture, variant: number) {
         super();
 
         this.sprite = new Sprite(texture);
         this.sprite.scale.set(0.3);
         this.addChild(this.sprite);
 
-        const verticesArray = polygonsJSON[variant];
-        const points = verticesArray.map(([x, y]) => new SAT.Vector(x * 0.3, y * 0.3));
+        this.setPolygon(variant);
 
-        this.polygon = this.polygon = new SAT.Polygon(new SAT.Vector(this.x, this.y), points);
-
-        //this.debugPolygon = new Graphics();
-        //this.drawPolygon();
-        //this.addChild(this.debugPolygon);
+        this.debugPolygon = new Graphics();
+        this.drawPolygon();
+        this.addChild(this.debugPolygon);
 
         this.eventMode = 'static';
         this.sprite.eventMode = 'static';
         this.sprite.interactive = true;
     }
 
-    /*
+    private setPolygon(index: number) {
+
+        const verticesArray = polygonsJSON[index];
+        const points = verticesArray.map(([x, y]) => new SAT.Vector(x * 0.3, y * 0.3));
+
+        this.polygon = this.polygon = new SAT.Polygon(new SAT.Vector(this.x, this.y), points);
+    }
+
+    public changeTexture(texture: Texture, variant: number) {
+        this.removeChild(this.sprite);
+        
+        this.sprite = new Sprite(texture);
+        this.sprite.scale.set(0.3);
+        this.addChild(this.sprite);
+
+        this.setPolygon(variant);
+
+        this.sprite.eventMode = 'static';
+        this.sprite.interactive = true;
+    }
+
+    
     private drawPolygon() {
         this.debugPolygon.clear();
 
@@ -59,7 +77,7 @@ export class PlayerContainer extends Container {
 
         this.debugPolygon.endFill();
     }
-    */
+    
 
     update(asseX: number, asseY: number) {
         this.x += asseX;

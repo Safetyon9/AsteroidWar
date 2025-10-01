@@ -8,9 +8,9 @@ import volumeOff from "../icons/volume-off-svgrepo-com.svg"
 import type { BackgroundMusicRef, BackgroundMusicProps } from '../../types/settingsType';
 
 const BackgroundMusic = forwardRef<BackgroundMusicRef, BackgroundMusicProps>(({song}, ref) => {
-    const [volume, setVolume] = useState(0.1);
-    const [lastVolume, setLastVolume] = useState(0.1);
-    const [play,{ sound, stop }] = useSound(song, { loop: true, volume: 0.1});
+    const [volume, setVolume] = useState(0.2);
+    const [lastVolume, setLastVolume] = useState(0.2);
+    const [play,{ sound, stop }] = useSound(song, { loop: true, volume: 0.2});
 
     useEffect(() => {
         play();

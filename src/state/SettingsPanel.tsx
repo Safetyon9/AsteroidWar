@@ -1,7 +1,6 @@
 import './WelcomePages.css';
 import React, { useState, useEffect } from "react";
 import Slider from '@mui/material/Slider';
-import Switch from '@mui/material/Switch';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
@@ -12,6 +11,7 @@ import { saveSettings, loadSettings } from '../util/settingStorage.ts';
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusicRef })=> {
     const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
+    console.log("Mounting SettingsPanel")
 
     useEffect(() => {
         const saved = loadSettings();
@@ -22,7 +22,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusic
 
     return (
         <div
-            className='overlay-welcome'
+            className='overlay-settings'
         >
             <div
                 className="settings-panel"
@@ -34,21 +34,23 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusic
                         <p className='setting-name'>controls</p>
                         <div className='setting-change'>
                             <FormControl sx={{ width: '100%'}}>
-                                <InputLabel sx={{ color: 'white'}} id="multi-select-label">Choose your controls</InputLabel>
+                                <InputLabel sx={{ color: 'white'}} id="controls-label">Choose your controls</InputLabel>
                                 <Select
                                     sx={{color:'white'}}
                                     labelId="controls-label"
+                                    name="controls"
                                     value={settings.controls}
                                     onChange={(e) => setSettings(prev => ({...prev, controls: e.target.value as GameSettings["controls"]}))}
                                     MenuProps={{
+                                        disablePortal: true,
                                         PaperProps: {
-                                            sx: { backgroundColor: '#4e7ca0' }
+                                            sx: { backgroundColor: '#4e7ca0'}
                                         }
                                     }}
                                 >
-                                    <MenuItem sx={{color:'white'}} value="op1">keyboard</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="op2">mouse</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="op3">mobile</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="keyboard">keyboard</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="mouse">mouse</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="mobile">mobile</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>
@@ -74,20 +76,24 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusic
                         <p className='setting-name'>choose ship</p>
                         <div className='setting-change'>
                             <FormControl sx={{ width: '100%'}}>
-                                <InputLabel sx={{ color: 'white'}} id="multi-select-label">Choose your ship</InputLabel>
+                                <InputLabel sx={{ color: 'white'}} id="ship-label">Choose your ship</InputLabel>
                                 <Select
                                     sx={{color:'white'}}
                                     labelId="ship-label"
+                                    name="ship"
                                     value={settings.ship}
                                     onChange={(e) => setSettings(prev => ({...prev, ship: e.target.value as GameSettings["ship"]}))}
                                     MenuProps={{
+                                        disablePortal: true,
                                         PaperProps: {
                                             sx: { backgroundColor: '#4e7ca0' }
                                         }
                                     }}
                                 >
-                                    <MenuItem sx={{color:'white'}} value="op1">Eagle</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="op2">Falcon</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="eagle1">eagle1</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="eagle2">eagle2</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="predator">predator</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="falcon">falcon</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>
@@ -96,46 +102,24 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusic
                         <p className='setting-name'>Language</p>
                         <div className='setting-change'>
                             <FormControl sx={{ width: '100%'}}>
-                                <InputLabel sx={{ color: 'white'}} id="multi-select-label">Choose your language</InputLabel>
+                                <InputLabel sx={{ color: 'white'}} id="language-label">Choose your language</InputLabel>
                                 <Select
                                     sx={{color:'white'}}
                                     labelId="language-label"
+                                    name='language'
                                     value={settings.language}
                                     onChange={(e) => setSettings(prev => ({...prev, language: e.target.value as GameSettings["language"]}))}
                                     MenuProps={{
+                                        disablePortal: true,
                                         PaperProps: {
-                                            sx: { backgroundColor: '#4e7ca0' }
+                                            sx: { backgroundColor: '#4e7ca0'}
                                         }
                                     }}
                                 >
-                                    <MenuItem sx={{color:'white'}} value="op1">English</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="op2">Italian</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="english">english</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="italian">italian</MenuItem>
                                 </Select>
                             </FormControl>
-                        </div>
-                    </div>
-                    <div className='settings-options'>
-                        <p className='setting-name'>Subtitles</p>
-                        <div className='setting-change'>
-                            <Switch
-                                checked={settings.subtitles}
-                                onChange={(e) => setSettings(prev => ({...prev, subtitles: e.target.checked}))}
-                                sx={{
-                                    '& .MuiSwitch-switchBase.Mui-checked': {
-                                        color: '#ffcc80',
-                                    },
-                                    '& .MuiSwitch-switchBase.Mui-checked:hover': {
-                                        backgroundColor: 'rgba(255,165,0,0.2)',
-                                    },
-                                    '& .Mui-checked + .MuiSwitch-track': {
-                                        backgroundColor: '#ffffff',
-                                        opacity: 1,
-                                    },
-                                    '& .MuiSwitch-track': {
-                                        backgroundColor: '#555',
-                                    },
-                                }}
-                            />
                         </div>
                     </div>
                 </div>

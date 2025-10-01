@@ -6,11 +6,11 @@ import {
 import SAT from 'sat';
 
 export class Laser extends Sprite {
-    private speed: number = 12;
+    private speed: number = 15;
     public polygon: SAT.Polygon;
     //private debugPolygon: Graphics;
 
-    constructor(texture: Texture, x: number, y: number) {
+    constructor(x: number, y: number, texture: Texture) {
         super(texture);
 
         this.x = x;
@@ -59,8 +59,8 @@ export class Laser extends Sprite {
     }
     */
     
-    update() {
-        this.y -= this.speed;
+    update(delta: number) {
+        this.y -= this.speed * delta;
         
         this.polygon.pos.y = this.y;
         this.polygon.pos.x = this.x;

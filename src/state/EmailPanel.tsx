@@ -7,11 +7,11 @@ const EmailPanel: React.FC<EmailPanelProps> = ({ visible, onClose })=> {
 
     return (
         <div
-            className='overlay-welcome'
+            className='overlay-settings'
             onClick={onClose}
         >
             <div
-                className="welcome-panel"
+                className="settings-panel"
                 onClick={e => e.stopPropagation()}
             >
                 <h1 className='benvenuto'>Email me for more info</h1>

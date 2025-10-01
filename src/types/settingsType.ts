@@ -2,7 +2,7 @@ import type React from "react";
 
 export type GameSettings = {
   controls: "keyboard" | "mouse" | "mobile";
-  ship: "eagle" | "falcon";
+  ship: "eagle1" | "eagle2" | "predator" | "falcon";
   language: "english" | "italian";
   volume: number;
   subtitles: boolean;
@@ -10,7 +10,7 @@ export type GameSettings = {
 
 export const DEFAULT_SETTINGS: GameSettings = {
   controls: "keyboard",
-  ship: "eagle",
+  ship: "eagle1",
   language: "english",
   volume: 0.1,
   subtitles: true,
