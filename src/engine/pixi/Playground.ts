@@ -177,8 +177,8 @@ export class Playground {
             this.player.skew.x += (targetSkewX - this.player.skew.x) * 0.1;
             this.player.skew.y += (targetSkewY - this.player.skew.y) * 0.1;
 
-            const targetRotation = Math.atan2(dy, dx) * 0.01;
-            this.player.rotation += (targetRotation - this.player.rotation) * 0.01;
+            const targetRotation = Math.atan2(dy, dx) * 0.002;
+            this.player.rotation += (targetRotation - this.player.rotation) * 0.002;
         }
     }
 

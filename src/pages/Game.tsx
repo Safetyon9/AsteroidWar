@@ -29,27 +29,12 @@ export interface GameCallbacks {
     onPauseChange?: (paused: boolean) => void;
 }
 
-const playerTexture = await Promise.all([
-    Assets.load(playerTexture1),
-    Assets.load(playerTexture2),
-    Assets.load(playerTexture3),
-    Assets.load(playerTexture4),
-]);
-
-const asteroidTexture = await Promise.all([
-    Assets.load(asteroidTexture1),
-    Assets.load(asteroidTexture2),
-    Assets.load(asteroidTexture3),
-    Assets.load(asteroidTexture4),
-    Assets.load(asteroidTexture5),
-    Assets.load(asteroidTexture6),
-]);
-
-const laserTexture = await Assets.load(laserTexture1);
-
 export function GamePage() {
     const gameContainer = useRef<HTMLDivElement>(null);
     const playgroundRef = useRef<Playground | null>(null);
+    const [_playerTexture, setPlayerTexture] = useState<any[]>([]);
+    const [_asteroidTexture, setAsteroidTexture] = useState<any[]>([]);
+    const [_laserTexture, setLaserTexture] = useState<any | null>(null);
 
     const [score, setScore] = useState(0);
     const [lives, setLives] = useState(3);
@@ -70,14 +55,42 @@ export function GamePage() {
             onPauseChange: setShowSettingsPanel,
         };
 
-        playgroundRef.current = new Playground(
-            gameContainer.current!,
-            playerTexture,
-            1,
-            asteroidTexture,
-            laserTexture,
-            callbacks
-        );
+        async function loadTextures() {
+            const playerTexture = await Promise.all([
+                Assets.load(playerTexture1),
+                Assets.load(playerTexture2),
+                Assets.load(playerTexture3),
+                Assets.load(playerTexture4),
+            ]);
+
+            setPlayerTexture(playerTexture);
+
+            const asteroidTexture = await Promise.all([
+                Assets.load(asteroidTexture1),
+                Assets.load(asteroidTexture2),
+                Assets.load(asteroidTexture3),
+                Assets.load(asteroidTexture4),
+                Assets.load(asteroidTexture5),
+                Assets.load(asteroidTexture6),
+            ]);
+
+            setAsteroidTexture(asteroidTexture);
+
+            const laserTexture = await Assets.load(laserTexture1);
+
+            setLaserTexture(laserTexture);
+
+            playgroundRef.current = new Playground(
+                gameContainer.current!,
+                playerTexture,
+                1,
+                asteroidTexture,
+                laserTexture,
+                callbacks
+            );
+        }
+
+        loadTextures();
     
         return () => {
             playgroundRef.current?.destroy();
@@ -88,11 +101,11 @@ export function GamePage() {
     return (
         <div className="mainContainer">
             {showSettingsPanel && (
-                <SettingsPanel
-                    visible
-                    onClose={() => setShowSettingsPanel(false)}
-                    bgMusicRef={bgMusicRef}
-                />
+            <SettingsPanel
+                visible
+                onClose={() => setShowSettingsPanel(false)}
+                bgMusicRef={bgMusicRef}
+            />
             )}
 
             <div className="pixiContainer" ref={gameContainer}></div>
