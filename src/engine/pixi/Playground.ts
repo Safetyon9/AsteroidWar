@@ -265,8 +265,8 @@ export class Playground {
         this.shootBtn.lineStyle(3, 0xffffff, 0.8);
         this.shootBtn.drawCircle(0, 0, 50);
         this.shootBtn.endFill();
-        this.shootBtn.x = this.app.screen.width - 70;
-        this.shootBtn.y = this.app.screen.height - 100;
+        this.shootBtn.x = this.app.screen.width - 170;
+        this.shootBtn.y = this.app.screen.height - 200;
         this.shootBtn.interactive = true;
         (this.shootBtn as any).buttonMode = true;
         this.app.stage.addChild(this.shootBtn);
@@ -290,7 +290,7 @@ export class Playground {
         this.joystickManager = nipplejs.create({
             zone: document.body,
             mode: 'static',
-            position: { left: '100px', bottom: '100px' },
+            position: { left: '200px', bottom: '200px' },
             color: '#ffcc80',
             size: 200,
         });

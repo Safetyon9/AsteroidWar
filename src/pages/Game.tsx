@@ -120,7 +120,7 @@ export function GamePage() {
                         playgroundRef.current?.setControlType(savedSettings.controls);
                     }
 
-                    if (savedSettings) {
+                    if (savedSettings && savedSettings.ship >= 0) {
                         const newTexture = playerTexture[savedSettings.ship];
                         playgroundRef.current?.changePlayerTexture(newTexture, savedSettings.ship);
                     }
