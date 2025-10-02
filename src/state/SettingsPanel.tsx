@@ -11,7 +11,6 @@ import { saveSettings, loadSettings } from '../util/settingStorage.ts';
 
 const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusicRef })=> {
     const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
-    console.log("Mounting SettingsPanel")
 
     useEffect(() => {
         const saved = loadSettings();
@@ -90,10 +89,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusic
                                         }
                                     }}
                                 >
-                                    <MenuItem sx={{color:'white'}} value="eagle1">eagle1</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="eagle2">eagle2</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="predator">predator</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="falcon">falcon</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value={0}>eagle1</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value={1}>eagle2</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value={2}>predator</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value={3}>falcon</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>
@@ -116,8 +115,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ visible, onClose, bgMusic
                                         }
                                     }}
                                 >
-                                    <MenuItem sx={{color:'white'}} value="english">english</MenuItem>
-                                    <MenuItem sx={{color:'white'}} value="italian">italian</MenuItem>
+                                    <MenuItem sx={{color:'white'}} value="english">coming soon</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>

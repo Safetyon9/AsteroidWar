@@ -10,11 +10,16 @@ import EmailPanel from "../state/EmailPanel.tsx";
 import { useNavigate } from "react-router-dom";
 import type { BackgroundMusicRef } from "../types/settingsType.ts";
 import MenuBackgroundMusic from "../assets/audio/space-background.mp3";
+import { loadSettings } from "../util/settingStorage.ts";
 
 const MainMenu: React.FC = () => {
   const navigate = useNavigate();
   const [showEmailPanel, setShowEmailPanel] = useState(false);
   const [showSettingsPanel, setShowSettingsPanel] = useState(false);
+
+  const savedSettings = loadSettings();
+  const initialVolume = savedSettings?.volume ?? 0.5;
+  console.log(initialVolume);
 
   const bgMusicRef = useRef<BackgroundMusicRef>(null);
 
@@ -39,7 +44,7 @@ const MainMenu: React.FC = () => {
         onClose={() => setShowSettingsPanel(false)}
         bgMusicRef={bgMusicRef}
       />
-      <BackgroundMusic ref={bgMusicRef} song={MenuBackgroundMusic} />
+      <BackgroundMusic ref={bgMusicRef} song={MenuBackgroundMusic} initialVolume={initialVolume} />
 
         <div className="stars"/>
         <h1 className="titolo">SpaceWar 2D</h1>

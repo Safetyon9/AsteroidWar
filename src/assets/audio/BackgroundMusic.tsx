@@ -7,8 +7,10 @@ import volumeOff from "../icons/volume-off-svgrepo-com.svg"
 
 import type { BackgroundMusicRef, BackgroundMusicProps } from '../../types/settingsType';
 
-const BackgroundMusic = forwardRef<BackgroundMusicRef, BackgroundMusicProps>(({song}, ref) => {
-    const [volume, setVolume] = useState(0.2);
+const BackgroundMusic = forwardRef<BackgroundMusicRef, BackgroundMusicProps>(({song, initialVolume = 0.5}, ref) => {
+    const initialVolumeReady = Math.min(Math.max(initialVolume, 0), 0.1) * 2;
+
+    const [volume, setVolume] = useState(initialVolumeReady);
     const [lastVolume, setLastVolume] = useState(0.2);
     const [play,{ sound, stop }] = useSound(song, { loop: true, volume: 0.2});
 
@@ -28,7 +30,7 @@ const BackgroundMusic = forwardRef<BackgroundMusicRef, BackgroundMusicProps>(({s
 
     useImperativeHandle(ref, () => ({
         setCustomVolume: (x: number) => {
-            const safeVolume = Math.max(0,Math.min(x, 0.1));
+            const safeVolume = Math.max(0,Math.min(x, 0.2));
             setVolume(safeVolume);
             if (safeVolume > 0) {
                 setLastVolume(safeVolume);

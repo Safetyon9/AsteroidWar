@@ -2,11 +2,13 @@ import './GamePage.css'
 import { useRef, useEffect, useState } from "react";
 import { Playground } from "../engine/pixi/Playground"
 import SettingsPanel from "../state/SettingsPanel";
+import { useNavigate } from "react-router-dom";
 
 import BackgroundMusic from "../assets/audio/BackgroundMusic";
 import type { BackgroundMusicRef } from "../types/settingsType";
 import MenuBackgroundMusic from "../assets/audio/game-background.mp3";
 import { Assets} from 'pixi.js';
+import { loadSettings } from '../util/settingStorage';
 
 import playerTexture1 from '../assets/player_sprites/jet_eagle1_grande.png'
 import playerTexture2 from '../assets/player_sprites/jet_eagle2_grande.png';
@@ -30,15 +32,20 @@ export interface GameCallbacks {
 }
 
 export function GamePage() {
+    const navigate = useNavigate();
     const gameContainer = useRef<HTMLDivElement>(null);
     const playgroundRef = useRef<Playground | null>(null);
-    const [_playerTexture, setPlayerTexture] = useState<any[]>([]);
+    const [playerTexture, setPlayerTexture] = useState<any[]>([]);
     const [_asteroidTexture, setAsteroidTexture] = useState<any[]>([]);
     const [_laserTexture, setLaserTexture] = useState<any | null>(null);
+    const savedSettings = loadSettings();
+    const [controls, _setControlType] = useState<'keyboard' | 'mouse' | 'mobile'>(savedSettings?.controls ?? 'mouse');
+
+    const initialVolume = savedSettings?.volume ?? 0.5;
 
     const [score, setScore] = useState(0);
     const [lives, setLives] = useState(3);
-    const [paused, setPaused] = useState(false);
+    const [, setPaused] = useState(false);
     const [showSettingsPanel, setShowSettingsPanel] = useState(false);
     const bgMusicRef = useRef<BackgroundMusicRef>(null);
     const initialized = useRef(false);
@@ -86,7 +93,8 @@ export function GamePage() {
                 1,
                 asteroidTexture,
                 laserTexture,
-                callbacks
+                callbacks,
+                controls
             );
         }
 
@@ -103,14 +111,27 @@ export function GamePage() {
             {showSettingsPanel && (
             <SettingsPanel
                 visible
-                onClose={() => setShowSettingsPanel(false)}
+                onClose={() => {
+                    setShowSettingsPanel(false);
+
+                    const savedSettings = loadSettings();
+
+                    if(savedSettings?.controls) {
+                        playgroundRef.current?.setControlType(savedSettings.controls);
+                    }
+
+                    if (savedSettings) {
+                        const newTexture = playerTexture[savedSettings.ship];
+                        playgroundRef.current?.changePlayerTexture(newTexture, savedSettings.ship);
+                    }
+                }}
                 bgMusicRef={bgMusicRef}
             />
             )}
 
             <div className="pixiContainer" ref={gameContainer}></div>
 
-            <BackgroundMusic ref={bgMusicRef} song={MenuBackgroundMusic} />
+            <BackgroundMusic ref={bgMusicRef} song={MenuBackgroundMusic} initialVolume={initialVolume} />
 
             
 
@@ -135,8 +156,23 @@ export function GamePage() {
             <div className="hud">
                 <span>Score: {score}</span>
                 <span>Lives: {lives}</span>
-                {paused && <span>GAMEOVER</span>}
             </div>
+
+            <button
+                className="homeButton"
+                onClick={() => navigate("/")}
+            >
+                <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g transform="scale(1, -1) translate(0, -64)">
+                    <path 
+                    d="M32 12 L12 32 H20 V52 H44 V32 H52 L32 12 Z" 
+                    fill="#ffcc80" 
+                    stroke="#ffcc80" 
+                    strokeWidth="4"
+                    />
+                </g>
+                </svg>
+            </button>
 
         </div>
     );

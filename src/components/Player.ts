@@ -1,8 +1,8 @@
 import {
     Container,
     Sprite,
-    Texture,
-    Graphics
+    Texture
+    //Graphics
 } from 'pixi.js';
 import SAT from 'sat';
 
@@ -16,7 +16,7 @@ const polygonsJSON = [polygon0, polygon1, polygon2, polygon3];
 export class PlayerContainer extends Container {
     public sprite: Sprite;
     public polygon!: SAT.Polygon;
-    private debugPolygon: Graphics;
+    //private debugPolygon: Graphics;
 
     constructor(texture: Texture, variant: number) {
         super();
@@ -27,9 +27,9 @@ export class PlayerContainer extends Container {
 
         this.setPolygon(variant);
 
-        this.debugPolygon = new Graphics();
-        this.drawPolygon();
-        this.addChild(this.debugPolygon);
+        //this.debugPolygon = new Graphics();
+        //this.drawPolygon();
+        //this.addChild(this.debugPolygon);
 
         this.eventMode = 'static';
         this.sprite.eventMode = 'static';
@@ -57,7 +57,7 @@ export class PlayerContainer extends Container {
         this.sprite.interactive = true;
     }
 
-    
+    /*
     private drawPolygon() {
         this.debugPolygon.clear();
 
@@ -77,7 +77,7 @@ export class PlayerContainer extends Container {
 
         this.debugPolygon.endFill();
     }
-    
+    */
 
     update(asseX: number, asseY: number) {
         this.x += asseX;

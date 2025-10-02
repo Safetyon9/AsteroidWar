@@ -1,19 +1,20 @@
 //Packages
-import { Application, Texture } from "pixi.js";
+import { Application, Texture, Graphics } from "pixi.js";
 import type { GameCallbacks } from "../../pages/Game";
 import SAT from 'sat';
+import nipplejs from 'nipplejs';
 
 //Classi
 import { PlayerContainer } from "../../components/Player";
 import { Laser } from "../../components/Laser";
 import { Asteroid } from "../../components/Asteroid";
 
-
 export class Playground {
 
     private app!: Application;
     private container: HTMLDivElement;
     private callbacks?: GameCallbacks
+    public controlType: 'mouse' | 'keyboard' | 'mobile';
 
     private player!: PlayerContainer;
     private lasers: Laser[] = [];
@@ -38,15 +39,26 @@ export class Playground {
 
     private asteroidInterval: ReturnType<typeof setInterval> | null = null;
 
+    private shootBtn?: Graphics;
+    private joystickManager?: nipplejs.JoystickManager;
+
+    private boundKeyboardHandler: ((e: KeyboardEvent) => void) | null = null;
+    private boundPointerMove: ((e: any) => void) | null = null;
+    private boundPointerDown: ((e: any) => void) | null = null;
+    private boundEscapeHandler: ((e: KeyboardEvent) => void) | null = null;
+    private boundKeyboardUpHandler: ((e: KeyboardEvent) => void) | null = null;
+    private keysPressed: { [key: string]: boolean } = {};
+
     constructor(
         container: HTMLDivElement,
         playerTexture: Texture[],
         playerVariant: number,
         asteroidTexture: Texture[],
         laserTexture: Texture,
-        callbacks?: GameCallbacks
+        callbacks?: GameCallbacks,
+        controlType: 'mouse' | 'keyboard' | 'mobile' = 'mouse'
     ) {
-        console.log('Playground instance created', container, new Date());
+        this.controlType = controlType;
         this.container = container;
         this.callbacks = callbacks;
 
@@ -85,30 +97,21 @@ export class Playground {
             this.callbacks.onLifeChange(this.lives);
         }
 
-        this.app.stage.on('pointermove', (event) => {
-            const pos = event.global;
-            this.targetX = pos.x;
-            this.targetY = pos.y;
-        });
-
-        this.app.stage.on('pointerdown', () => this.shootLaser());
+        this.initEventListeners();
 
         this.asteroidInterval = setInterval(() => this.spawnAsteroid(), 400);
 
         this.app.ticker.add((ticker) => this.update(ticker.deltaTime));
-
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') this.togglePause();
-        });
     }
 
     private shootLaser() {
         if (!this.canShoot || this.paused) return;
 
-        const laserX = this.player.x + this.player.sprite.width / 2 - 5;
+        const laserX = this.player.x + this.player.sprite.width / 2;
         const laserY = this.player.y - 10;
 
         const laser = new Laser(laserX, laserY, this.laserTexture);
+        laser.x = this.player.x + this.player.sprite.width / 2 - laser.width / 2;
         this.lasers.push(laser);
         this.app.stage.addChild(laser);
 
@@ -146,8 +149,12 @@ export class Playground {
                 clearInterval(this.asteroidInterval);
                 this.asteroidInterval = null;
             }
+            if (this.controlType === 'mobile') this.destroyMobile();
         } else {
             this.asteroidInterval = setInterval(() => this.spawnAsteroid(), 400);
+            if (this.controlType === 'mobile' && !this.joystickManager) {
+                this.createMobile();
+            }
         }
 
         this.callbacks?.onPauseChange?.(this.paused);
@@ -162,6 +169,14 @@ export class Playground {
     }
 
     private updatePlayer(delta: number) {
+        const speedk = 4.5;
+        if(this.controlType === 'keyboard') {
+            if (this.keysPressed['KeyW'] || this.keysPressed['ArrowUp']) this.targetY -= speedk;
+            if (this.keysPressed['KeyS'] || this.keysPressed['ArrowDown']) this.targetY += speedk;
+            if (this.keysPressed['KeyA'] || this.keysPressed['ArrowLeft']) this.targetX -= speedk;
+            if (this.keysPressed['KeyD'] || this.keysPressed['ArrowRight']) this.targetX += speedk;
+        }
+
         const dx = this.targetX - this.player.x;
         const dy = this.targetY - this.player.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -170,7 +185,7 @@ export class Playground {
             const speed = 0.02;
             this.player.update(dx * speed * delta, dy * speed * delta);
 
-            const maxSkew = 0.1;
+            const maxSkew = 0.08;
             const targetSkewX = Math.max(Math.min(dx / 200, maxSkew), - maxSkew);
             const targetSkewY = Math.max(Math.min(dy / 200, maxSkew), - maxSkew);
 
@@ -180,6 +195,137 @@ export class Playground {
             const targetRotation = Math.atan2(dy, dx) * 0.002;
             this.player.rotation += (targetRotation - this.player.rotation) * 0.002;
         }
+    }
+
+    private initEventListeners() {
+        this.removeEventListeners();
+
+        if (!this.boundEscapeHandler) {
+            this.boundEscapeHandler = (e: KeyboardEvent) => {
+                if (e.key === 'Escape') this.togglePause();
+            }
+            window.addEventListener('keydown', this.boundEscapeHandler);
+        }
+        if (this.controlType === 'keyboard') {
+            this.boundKeyboardHandler = (e: KeyboardEvent) => this.handleKeyboardDown(e);
+            this.boundKeyboardUpHandler = (e: KeyboardEvent) => this.handleKeyboardUp(e);
+            window.addEventListener('keydown', this.boundKeyboardHandler);
+            window.addEventListener('keyup', this.boundKeyboardUpHandler);
+        }
+        if (this.controlType === 'mouse') {
+            this.boundPointerMove = (e: any) => {
+                const pos = e.global;
+                this.targetX = pos.x;
+                this.targetY = pos.y;
+            };
+            this.boundPointerDown = () => this.shootLaser();
+            this.app.stage.on('pointermove', this.boundPointerMove);
+            this.app.stage.on('pointerdown', this.boundPointerDown);
+        }
+        if (this.controlType === 'mobile') {
+            this.createMobile();
+        }
+    }
+
+    private removeEventListeners() {
+        if (this.boundKeyboardUpHandler) {
+            window.removeEventListener('keyup', this.boundKeyboardUpHandler);
+            this.boundKeyboardUpHandler = null;
+        }
+        if (this.boundKeyboardHandler) {
+            window.removeEventListener('keydown', this.boundKeyboardHandler);
+            this.boundKeyboardHandler = null;
+        }
+        if (this.boundPointerMove) {
+            this.app.stage.off('pointermove', this.boundPointerMove);
+            this.boundPointerMove = null;
+        }
+        if (this.boundPointerDown) {
+            this.app.stage.off('pointerdown', this.boundPointerDown);
+            this.boundPointerDown = null;
+        }
+
+        this.destroyMobile();
+    }
+
+    private handleKeyboardDown(e: KeyboardEvent) {
+        this.keysPressed[e.code] = true;
+        if(e.code === 'Space' || e.code === 'Enter') {
+            this.shootLaser();
+        }
+    }
+
+    private handleKeyboardUp(e: KeyboardEvent) {
+        this.keysPressed[e.code] = false;
+    }
+
+    private createMobile() {
+        this.shootBtn = new Graphics();
+        this.shootBtn.beginFill(0xffcc80, 0.9);
+        this.shootBtn.lineStyle(3, 0xffffff, 0.8);
+        this.shootBtn.drawCircle(0, 0, 25);
+        this.shootBtn.endFill();
+        this.shootBtn.x = this.app.screen.width - 70;
+        this.shootBtn.y = this.app.screen.height - 100;
+        this.shootBtn.interactive = true;
+        (this.shootBtn as any).buttonMode = true;
+        this.app.stage.addChild(this.shootBtn);
+
+        this.shootBtn.on('pointerdown', () => {
+            this.shootLaser();
+            this.shootBtn!.alpha = 0.6;
+            this.shootBtn!.scale.set(0.9); 
+        });
+
+        this.shootBtn.on('pointerup', () =>{
+            this.shootBtn!.alpha = 1;
+            this.shootBtn!.scale.set(1)
+        });
+
+        this.shootBtn.on('pointerupoutside', () => {
+            this.shootBtn!.alpha = 1;
+            this.shootBtn!.scale.set(1)
+        });
+
+        this.joystickManager = nipplejs.create({
+            zone: document.body,
+            mode: 'static',
+            position: { left: '100px', bottom: '100px' },
+            color: '#ffcc80',
+            size: 100,
+        });
+
+        this.joystickManager.on('move', (_evt, data) => {
+            if (!data.angle || !data.distance) return;
+            const speed = 250;
+            this.targetX = this.player.x + Math.cos(data.angle.radian) * (data.distance / 50) * speed;
+            this.targetY = this.player.y - Math.sin(data.angle.radian) * (data.distance / 50) * speed;
+        });
+
+        this.joystickManager.on('end', () => {
+            this.targetX = this.player.x;
+            this.targetY = this.player.y;
+        });
+    }
+
+    private destroyMobile() {
+        if(this.shootBtn) {
+            this.shootBtn.removeAllListeners();
+            this.app.stage.removeChild(this.shootBtn);
+            this.shootBtn.destroy();
+            this.shootBtn = undefined;
+        }
+        if (this.joystickManager) {
+            this.joystickManager.destroy();
+            this.joystickManager = undefined;
+        }
+    }
+
+    public setControlType(type: 'keyboard' | 'mouse' | 'mobile') {
+        if (this.controlType === type) return;
+        this.removeEventListeners();
+        this.controlType = type;
+        this.initEventListeners();
     }
 
     private updateLasers(delta: number) {
@@ -265,6 +411,11 @@ export class Playground {
             this.paused = true;
             this.callbacks?.onGameOver?.();
         }
+    }
+
+    public changePlayerTexture(playerTexture: Texture, playerVariant: number) {
+        this.player.changeTexture(playerTexture, playerVariant);
+        this.playervariant = playerVariant;
     }
 
     private clearAllTimers() {
