@@ -57,6 +57,16 @@
     transition: transform 0.1s ease, box-shadow 0.2s ease;
 }
 
+.homeButton:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 204, 128, 0.6);
+}
+
+.homeButton:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 8px rgba(255, 204, 128, 0.3);
+}
+
 .hud {
   position: absolute;
   top: 20px;

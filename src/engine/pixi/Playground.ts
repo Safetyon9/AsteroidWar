@@ -263,7 +263,7 @@ export class Playground {
         this.shootBtn = new Graphics();
         this.shootBtn.beginFill(0xffcc80, 0.9);
         this.shootBtn.lineStyle(3, 0xffffff, 0.8);
-        this.shootBtn.drawCircle(0, 0, 25);
+        this.shootBtn.drawCircle(0, 0, 50);
         this.shootBtn.endFill();
         this.shootBtn.x = this.app.screen.width - 70;
         this.shootBtn.y = this.app.screen.height - 100;
@@ -292,7 +292,7 @@ export class Playground {
             mode: 'static',
             position: { left: '100px', bottom: '100px' },
             color: '#ffcc80',
-            size: 100,
+            size: 200,
         });
 
         this.joystickManager.on('move', (_evt, data) => {
