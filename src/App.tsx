@@ -6,7 +6,7 @@ import MainMenu from './pages/MainMenu.tsx';
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/AsteroidWar">
             <Routes>
                 <Route path="/" element={<MainMenu />} />
                 <Route path="/game" element={<GamePage />} />
